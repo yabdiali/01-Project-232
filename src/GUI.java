@@ -26,16 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-/** Characters
- * 
- * Program that stores Characters represented from League of Legends.
- * 
- * @author Cassidy Halvorson
- *		   Due: Sept. 10 2014
- *
- *Source: GroceryList.java 		by Sue Fitzgerald 
- *
- */
+
 
 public class GUI extends JFrame {
 

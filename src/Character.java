@@ -1,13 +1,4 @@
-/** Characters
- * 
- * Program that stores Characters represented from League of Legends.
- * 
- * @author Cassidy Halvorson
- *		   Due: Sept. 10 2014
- *
- * Source: GroceryList.java 	by Sue Fitzgerald 
- * 
- */
+
 
 public class Character  implements Cloneable {
 	private String name;
