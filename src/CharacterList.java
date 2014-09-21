@@ -1,17 +1,31 @@
 
 
-public class CharacterList {
+public class CharacterList  { //implements Cloneable {
 	private int numItems;
 	private Character[] characterListArray;
-	private Character ci;
 	
 	/** CharacterList()
-	 *  creates an empty Character List
+	 *  creates an empty Character List and sets the Array at 10 item slots
 	 */
 	
-	CharacterList() {
-		numItems = 0; 
-		characterListArray = new Character[30];
+	public CharacterList() {
+		numItems = 0;
+		final int INITIAL_CAPACITY = 10;
+		characterListArray = new Character[INITIAL_CAPACITY];
+	}
+	
+	/** CharacterList(int InitialCapacity) 
+	 *  
+	 * @param InitialCapacity
+	 */
+	
+	public CharacterList(int initialCapacity) {
+		if (initialCapacity < 0 ) {
+			throw new IllegalArgumentException
+			("initialCapacity is negatice: " + initialCapacity);
+		}
+		numItems = 0;
+		characterListArray = new Character[initialCapacity];
 	}
 	
 	/** addCharacter(Character item)
@@ -20,7 +34,36 @@ public class CharacterList {
 	 */
 	
 	public void add(Character item) {
+		if (numItems == characterListArray.length) {
+			ensureCapacity(numItems*2 + 1);
+		}
 		characterListArray[numItems ++] = new Character(item.getName(), item.getTitle(), item.getPrice(), item.getRole(), item.getReleaseDate());
+	}
+	
+	public CharacterList clone() {
+		CharacterList mimic;
+		try {
+			mimic = (CharacterList) super.clone();
+		}
+		catch (CloneNotSupportedException e) {
+			throw new RuntimeException
+			("This class CharacterList does not implement Cloneable");
+		}
+		mimic.characterListArray = characterListArray.clone();
+		return mimic;
+	}
+	
+	public void ensureCapacity(int minimumCapacity) {
+		Character[] biggerArray;
+		if (characterListArray.length < minimumCapacity) {
+			biggerArray = new Character[minimumCapacity];
+			System.arraycopy(characterListArray,  0,  biggerArray,  0 , numItems);
+			characterListArray = biggerArray;
+		}
+	}
+	
+	public int getCapacity() {
+		return characterListArray.length;
 	}
 	
 	/** toString()
@@ -62,14 +105,31 @@ public class CharacterList {
 	 * 
 	 */
 	
-	public Character searchForCharacter(String n) {
-		int i = 0;	
-			while(i < numItems) {			
-				if(characterListArray[i].equals(new Character(n, " ", 0, " ", " "))) {
-					return characterListArray[i];
+	
+	public Character searchForCharacter(String name) {
+		try {
+			int i = 0;	
+			boolean found = false;
+			while((i < numItems) && !found) {			
+				if(characterListArray[i].equals(new Character(name, " ", 0, " ", " "))) {
+					found = true;			
 				}
+				else
+						i++;
+				}
+			if (found) 
+				return characterListArray[i];
+			else
+				return null;
+			}catch (NullPointerException e) {
+				throw new RuntimeException
+				("Search for Character Broke");
 			}
-		return null; 
+			catch (RuntimeException e) {
+				throw new RuntimeException
+				("Search Method Broke");
+			}
+		
 	}
 	
 	/** removeCharacterFromList(String n)
@@ -80,36 +140,30 @@ public class CharacterList {
 	 * 
 	 */
 	
-	public boolean removeCharacterFromList(String n) { //(String n) { //Swap method
-		int i = 0;
-		Character ci = searchForCharacter(n);
-		while ((i < numItems) && (ci != characterListArray[i])) 
-			i++;
-			if (i == numItems) 
-				return false;
-			 else {
-				numItems--;
-				characterListArray[i] = characterListArray[numItems];
-				return true;
+	public void removeCharacterFromList(String name) { 
+		try{ 
+			int i = 0;
+			boolean found = false;
+			while ((i < numItems) && !found) {
+				if (characterListArray[i].equals(new Character(name, " ", 0, " ", " "))) {
+					found = true;
+				}
+				else {
+					i++;
+				}
+				if (found) 
+					characterListArray[i] = characterListArray[--numItems];
 			 }	
+		}catch (NullPointerException e) {
+			throw new RuntimeException
+			("Search for Character Broke");
+		}
+		catch (RuntimeException e) {
+			throw new RuntimeException
+			("Search Method Broke");
+		}
 	}
 	
-	/** remove(Character item)
-	 * 
-	 * @param item 	removes a Character from Array
-	 * 
-	 */
-	
-	public void remove(Character item) {
-		//Character ci = new Character;
-		   // characterListArray[numItems] = characterListArray[numItems-1];
-		   // numItems--;
-		//for (int i = 0; i < item.length; i++) {
-			//item[i] = null;
-		ci = item;
-		characterListArray[numItems --] = this.ci;
-	//	}
-	}
 	
 	/** change
 	 * Swaps old Character with new(updated) Character
@@ -122,8 +176,8 @@ public class CharacterList {
 	
 	public void change(String name, String title, int price, String role, String releaseDate)  {
 		Character ci = this.searchForCharacter(name);
+		this.removeCharacterFromList(name);
 		Character ciTemp = (Character) ci.clone();
-		this.remove(ci);
 		ciTemp.setName(name);
 		ciTemp.setTitle(title);
 		ciTemp.setPrice(price);
@@ -131,7 +185,27 @@ public class CharacterList {
 		ciTemp.setReleaseDate(releaseDate);
 		this.add(ciTemp);
 		}
+	
+	  public static void selectionSort(Character[] cl, int first, int n) { // fix into Objects
+		 int i, j; // loop control variables
+		 int big;  // Index of largest value in characterListArray[first] ... characterListArray[first+1]
+		 Character temp; // Used during the swapping of two array values
+		
+		 for(i = n-1; i > 0; i--) {
+			 big = first;
+			 for(j = first + 1; j <= first + i; j++)
+				 if (cl[big].compareTo(cl[j]) < 0)
+					 big = j;
+			 temp = cl[first + i];
+			 cl[first + i] = cl[big];
+			 cl[big] = temp;
+		 }		 
+	 } 
+	 
 }
+
+	
+
 
 
 	

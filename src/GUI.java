@@ -28,7 +28,7 @@ import javax.swing.table.TableColumn;
 
 
 
-public class GUI extends JFrame {
+public class GUI extends JFrame implements Cloneable{
 
 	//input panel
 	private JPanel inputPane;		
@@ -39,6 +39,8 @@ public class GUI extends JFrame {
 	private JTextField dateTextField;
 	private JButton enterDataButton;
 	private JButton editDataButton;
+	private JButton cloneButton;
+	private JButton sortButton;
 	
 	// output panel
 	private JPanel contentPane;  
@@ -220,6 +222,7 @@ public class GUI extends JFrame {
 		removeButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				removeCharacterFromList();
+				numItemDisplay.setText (getNumItems());
 			
 			}
 		});
@@ -233,12 +236,38 @@ public class GUI extends JFrame {
 		editDataButton = new JButton("Update");
 		editDataButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-					updateCharacterToList();		
+					updateCharacterToList();
+	
 			}
 		});
 		editDataButton.setFont(defaultFont);
 		editDataButton.setBounds(360, 50, 90, 28);
 		inputPane.add(editDataButton);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		
+		cloneButton = new JButton("Clone");
+		cloneButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				cloneCharacter();
+			}
+		});
+		cloneButton.setFont(defaultFont);
+		cloneButton.setBounds(360, 89, 90, 28);
+		inputPane.add(cloneButton);
+		setLocationRelativeTo(null);
+		setVisible(true);
+		
+		sortButton = new JButton("Sort");
+		sortButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+					//super.selectionSort(cl);
+	
+			}
+		});
+		sortButton.setFont(defaultFont);
+		sortButton.setBounds(485, 250, 90, 28); 
+		contentPane.add(sortButton);
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -273,7 +302,7 @@ public class GUI extends JFrame {
 		try
 		{
 			cl.add(new Character(nameTextField.getText(), titleTextField.getText(), Integer.parseInt(priceTextField.getText()), roleTextField.getText(), 
-				dateTextField.getText()));
+			dateTextField.getText()));
 			nameTextField.setText("");
 			titleTextField.setText("");
 			priceTextField.setText("");
@@ -295,6 +324,11 @@ public class GUI extends JFrame {
 	
 	public void removeCharacterFromList() {
 			cl.removeCharacterFromList(nameTextField.getText());
+			nameTextField.setText("");
+			titleTextField.setText("");
+			priceTextField.setText("");
+			roleTextField.setText("");
+			dateTextField.setText("");
 			displayList();
 	}
 	
@@ -345,15 +379,30 @@ public class GUI extends JFrame {
 		try
 		{
 		Character character = cl.searchForCharacter(nameTextField.getText());
-		titleTextField.setText(character.getTitle());
-		priceTextField.setText(Integer.toString(character.getPrice()));
-		roleTextField.setText(character.getRole());
-		dateTextField.setText(character.getReleaseDate());
+			titleTextField.setText(character.getTitle());
+			priceTextField.setText(Integer.toString(character.getPrice()));
+			roleTextField.setText(character.getRole());
+			dateTextField.setText(character.getReleaseDate());
 		}
-		catch (NullPointerException e)
-		{	
+		catch (NullPointerException e) {
+		throw new RuntimeException
+			("Something messed up in the GUI search for Character");
 		}
 	}
+	
+	//public Character cloneCharacter() { 												// need to fix
+		//Character character = cl.searchForCharacter(nameTextField.getText());
+		//character.clone();
+		 //character.add(new Character);
+		 //cl.add(new Character(nameTextField.getText(), titleTextField.getText(), Integer.parseInt(priceTextField.getText()), roleTextField.getText(), 
+		//return character;
+	//}
+	
+
+
+		
+	
+
  	
 	//Main Method
 	public static void main(String[] args) {

@@ -158,16 +158,22 @@ public class Character  implements Cloneable {
 	  * 
 	  */
 	 
-	 public Character clone() {
+	 public Character clone() { //Clone a character Object
 		 Character mimic;
 		 try {
 			 mimic = (Character) super.clone();
 		 }
 		 catch (CloneNotSupportedException e) {
-			 return null;
+			 throw new RuntimeException
+			 ("This Character Item clone attempt does not implement Clonable");
 		 }
 		 return mimic;
 	 }
+	 
+	 public int compareTo(Character c) {
+		 return this.name.compareToIgnoreCase(c.name);
+	 }
+
 }
 
 
